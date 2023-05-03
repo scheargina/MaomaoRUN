@@ -48,7 +48,8 @@ class Menu extends Phaser.Scene {
 
       if (Phaser.Input.Keyboard.JustDown(keyJUMP)) {
         game.settings = {
-          gameTimer: 45000    
+          gameTimer: 45000,
+          xianjing_p: 0.1/150
         }
         //this.sound.play('sfx_select');
         this.scene.start('playScene');    
