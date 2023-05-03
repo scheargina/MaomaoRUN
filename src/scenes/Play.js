@@ -16,6 +16,8 @@ class Play extends Phaser.Scene {
     
     create() {
       this.chengshi = this.add.tileSprite(0, 0, 640, 400, 'chengshi').setOrigin(0, 0);
+      this.shenling = this.add.tileSprite(0, 0, 640, 400, 'shenling').setOrigin(0, 0);
+      this.shenling.visible = false;
       this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x3131F3).setOrigin(0, 0);
       this.MaoMao = new MaoMao(this, game.config.width/20, game.config.height - 64*1.5, 'maomao').setOrigin(0,0);
       this.xianjing01 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai1').setOrigin(0,0);
@@ -31,6 +33,9 @@ class Play extends Phaser.Scene {
       //this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*5, 'aspaceship', 0, 30).setOrigin(0, 0);
       //this.ship04 = new liteSpaceship(this, game.config.width + borderUISize*9, borderUISize*4, 'kaiwen01', 0, 100).setOrigin(0, 0);
       this.MaoMao.anims.play('maomao');
+      this.speed = game.settings.speed;
+      this.xianjing_p =  game.settings.xianjing_p;
+      this.current = 0;
 
 
       keyJUMP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -73,18 +78,42 @@ class Play extends Phaser.Scene {
 
       if (!this.gameOver) {               
         this.MaoMao.update();
-        this.chengshi.tilePositionX += game.settings.speed;
+        this.chengshi.tilePositionX += this.speed;
+        this.shenling.tilePositionX += this.speed;
         this.xianjing01.update(); 
         this.xianjing02.update();
         this.xianjing03.update();
-        this.xianjing04.update();           
+        this.xianjing04.update();  
+        if(this.time.now - this.current >= 500){
+          this.current = this.time.now;
+          if(Math.random()<this.xianjing_p && !this.xianjing01.move && this.chengshi.visible){
+            this.xianjing01.move = true;
+          
+          }   
+          if(Math.random()<this.xianjing_p && !this.xianjing02.move && this.chengshi.visible){
+            this.xianjing02.move = true;
+          
+          }
+          if(Math.random()<this.xianjing_p && !this.xianjing03.move && this.shenling.visible){
+              this.xianjing03.move = true;
+            
+          }
+          if(Math.random()<this.xianjing_p && !this.xianjing04.move && this.shenling.visible){
+            this.xianjing04.move = true;
+          } 
+        }    
         this.clockRight.text = Math.floor((this.time.now - this.time.startTime)/1000);
         if(this.time.now - this.time.startTime >=15000 && game.settings.speed == this.xianjing01.moveSpeed){
-          this.xianjing01.moveSpeed += 2;
-          this.xianjing02.moveSpeed += 2;
-          this.xianjing03.moveSpeed += 2;
-          this.xianjing04.moveSpeed += 2;
-          game.settings.speed += 1;
+          this.xianjing01.moveSpeed += 1;
+          this.xianjing02.moveSpeed += 1;
+          this.xianjing03.moveSpeed += 1;
+          this.xianjing04.moveSpeed += 1;
+          this.speed += 1;
+        }
+        if(this.time.now - this.time.startTime >=30000 && this.shenling.visible == false){
+          this.shenling.visible = true;
+          this.chengshi.visible = false;
+          this.xianjing_p += 0.1;
         }
       }   
 
