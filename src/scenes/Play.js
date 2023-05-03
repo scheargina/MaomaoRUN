@@ -22,7 +22,7 @@ class Play extends Phaser.Scene {
       this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x3131F3).setOrigin(0, 0);
       this.MaoMao = new MaoMao(this, game.config.width/20, game.config.height - 64*1.5, 'maomao').setOrigin(0,0);
       this.xianjing01 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai1').setOrigin(0,0);
-      this.xianjing02 = new xianjing(this, game.config.width, game.config.height - 64*1.3, 'xukong').setOrigin(0,0);
+      this.xianjing02 = new xianjing(this, game.config.width, game.config.height - 64*1.1, 'xukong').setOrigin(0,0);
       this.xianjing03 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai2').setOrigin(0,0);
       this.xianjing04 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai2').setOrigin(0,0);
       this.anims.create({
@@ -31,6 +31,14 @@ class Play extends Phaser.Scene {
         frameRate: 5,
         repeat:-1
       });
+      this.anims.create({
+        key: 'yunshi',
+        frames: this.anims.generateFrameNumbers('yunshi', { start: 0, end: 1, first: 0}),
+        frameRate: 5,
+        repeat:-1
+      });
+      this.yunshi = this.add.sprite( game.config.width-120, game.config.height/3);
+      this.yunshi.anims.play('yunshi');
       //this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*5, 'aspaceship', 0, 30).setOrigin(0, 0);
       //this.ship04 = new liteSpaceship(this, game.config.width + borderUISize*9, borderUISize*4, 'kaiwen01', 0, 100).setOrigin(0, 0);
       this.MaoMao.anims.play('maomao');
@@ -134,8 +142,7 @@ class Play extends Phaser.Scene {
             padding: {
               top: 5,
               bottom: 5,
-            },
-            fixedWidth: 100
+            }
           }
           this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
           this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (Q) to Restart or (E) for Menu', scoreConfig).setOrigin(0.5);
