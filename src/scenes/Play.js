@@ -18,6 +18,10 @@ class Play extends Phaser.Scene {
       this.chengshi = this.add.tileSprite(0, 0, 640, 400, 'chengshi').setOrigin(0, 0);
       this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x3131F3).setOrigin(0, 0);
       this.MaoMao = new MaoMao(this, game.config.width/20, game.config.height - 64*1.5, 'maomao').setOrigin(0,0);
+      this.xianjing01 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai1').setOrigin(0,0);
+      this.xianjing02 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai1').setOrigin(0,0);
+      this.xianjing03 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai2').setOrigin(0,0);
+      this.xianjing04 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai2').setOrigin(0,0);
       this.anims.create({
         key: 'maomao',
         frames: this.anims.generateFrameNumbers('maomao', { start: 0, end: 3, first: 0}),
@@ -69,14 +73,19 @@ class Play extends Phaser.Scene {
 
       if (!this.gameOver) {               
         this.MaoMao.update();
-        this.chengshi.tilePositionX += 2;
-        // this.ship01.update();            
+        this.chengshi.tilePositionX += game.settings.speed;
+        this.xianjing01.update(); 
+        this.xianjing02.update();
+        this.xianjing03.update();
+        this.xianjing04.update();           
         this.clockRight.text = Math.floor((this.time.now - this.time.startTime)/1000);
-        // if(this.time.now - this.time.startTime >=15000 && game.settings.spaceshipSpeed == this.ship01.moveSpeed){
-        //   this.ship01.moveSpeed += 2;
-        //   this.ship02.moveSpeed += 3;
-        //   this.ship03.moveSpeed += 2;
-        // }
+        if(this.time.now - this.time.startTime >=15000 && game.settings.speed == this.xianjing01.moveSpeed){
+          this.xianjing01.moveSpeed += 2;
+          this.xianjing02.moveSpeed += 2;
+          this.xianjing03.moveSpeed += 2;
+          this.xianjing04.moveSpeed += 2;
+          game.settings.speed += 1;
+        }
       }   
 
       // if (this.checkCollision(this.p1Rocket, this.ship02)) {
