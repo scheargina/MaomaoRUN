@@ -10,6 +10,7 @@ class Play extends Phaser.Scene {
       this.load.image('zhangai1', './assets/zhangai1.png');
       this.load.image('zhangai2', './assets/zhangai2.png');
       this.load.image('zhadan', './assets/zhadan.png');
+      this.load.image('xukong', './assets/xikong.png');
       this.load.spritesheet('maomao', './assets/maomao.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 3});
       this.load.spritesheet('yunshi', './assets/yunshi.png', {frameWidth: 120, frameHeight: 96, startFrame: 0, endFrame: 1});
     }
@@ -21,7 +22,7 @@ class Play extends Phaser.Scene {
       this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x3131F3).setOrigin(0, 0);
       this.MaoMao = new MaoMao(this, game.config.width/20, game.config.height - 64*1.5, 'maomao').setOrigin(0,0);
       this.xianjing01 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai1').setOrigin(0,0);
-      this.xianjing02 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai1').setOrigin(0,0);
+      this.xianjing02 = new xianjing(this, game.config.width, game.config.height - 64*1.3, 'xukong').setOrigin(0,0);
       this.xianjing03 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai2').setOrigin(0,0);
       this.xianjing04 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai2').setOrigin(0,0);
       this.anims.create({
@@ -36,9 +37,12 @@ class Play extends Phaser.Scene {
       this.speed = game.settings.speed;
       this.xianjing_p =  game.settings.xianjing_p;
       this.current = 0;
+      this.youtong = false;
 
 
       keyJUMP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+      keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+      keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
       //keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
       
@@ -69,12 +73,12 @@ class Play extends Phaser.Scene {
       this.tiao.visible = false;
     }
     update() {
-      if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyJUMP)) {
+      if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyQ)) {
         this.scene.restart();
       }
-      // if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-      //   this.scene.start("menuScene");
-      // }
+      if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyE)) {
+        this.scene.start("menuScene");
+      }
 
       if (!this.gameOver) {               
         this.MaoMao.update();
@@ -88,9 +92,9 @@ class Play extends Phaser.Scene {
           this.current = this.time.now;
           if(Math.random()<this.xianjing_p && !this.xianjing01.move && this.chengshi.visible){
             this.xianjing01.move = true;
-          
+            this.youtong = true;
           }   
-          if(Math.random()<this.xianjing_p && !this.xianjing02.move && this.chengshi.visible){
+          if(Math.random()<this.xianjing_p && !this.xianjing02.move && this.chengshi.visible && !this.youtong){
             this.xianjing02.move = true;
           
           }
@@ -101,6 +105,7 @@ class Play extends Phaser.Scene {
           if(Math.random()<this.xianjing_p && !this.xianjing04.move && this.shenling.visible){
             this.xianjing04.move = true;
           } 
+          this.youtong = false;
         }    
         this.clockRight.text = Math.floor((this.time.now - this.time.startTime)/1000);
         if(this.time.now - this.time.startTime >=15000 && game.settings.speed == this.xianjing01.moveSpeed){
@@ -115,23 +120,40 @@ class Play extends Phaser.Scene {
           this.chengshi.visible = false;
           this.xianjing_p += 0.1;
         }
+        if (this.checkCollision(this.MaoMao, this.xianjing01)||
+        this.checkCollision(this.MaoMao, this.xianjing02)||
+        this.checkCollision(this.MaoMao, this.xianjing03)||
+        this.checkCollision(this.MaoMao, this.xianjing04)) {
+          this.gameOver = true;
+          let scoreConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'right',
+            padding: {
+              top: 5,
+              bottom: 5,
+            },
+            fixedWidth: 100
+          }
+          this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+          this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (Q) to Restart or (E) for Menu', scoreConfig).setOrigin(0.5);
+        }
       }   
 
-      // if (this.checkCollision(this.p1Rocket, this.ship02)) {
-      //   this.p1Rocket.reset();
-      //   this.shipExplode(this.ship02);
-      //   this.addTime();  
-      // }
+    
+
 
 
 
       
     }
-    checkCollision(rocket, ship) {
-      if (rocket.x < ship.x + ship.width && 
-        rocket.x + rocket.width > ship.x && 
-        rocket.y < ship.y + ship.height &&
-        rocket.height + rocket.y > ship. y) {
+    checkCollision(maomao, zhangai) {
+      if (maomao.x < zhangai.x + zhangai.width -8 && 
+        maomao.x + maomao.width > zhangai.x + 8 && 
+        maomao.y < zhangai.y + zhangai.height &&
+        maomao.height + maomao.y > zhangai.y + 16) {
         return true;
       } else {
         return false;

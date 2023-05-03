@@ -5,7 +5,7 @@ class MaoMao extends Phaser.GameObjects.Sprite {
 
       scene.add.existing(this);
       this.isJump = false;
-      this.jump = 2;
+      this.jump = 3;
       this.playerjump = 0;
       this.v = 0;
       this.a = 2;
