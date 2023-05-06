@@ -25,6 +25,7 @@ class Play extends Phaser.Scene {
       this.xianjing02 = new xianjing(this, game.config.width, game.config.height - 64*1.1, 'xukong').setOrigin(0,0);
       this.xianjing03 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai2').setOrigin(0,0);
       this.xianjing04 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai2').setOrigin(0,0);
+      this.maobohe = new tang(this, game.config.width - 60 , game.config.height/3 + 48, 'maobohe').setOrigin(0,0);
       this.anims.create({
         key: 'maomao',
         frames: this.anims.generateFrameNumbers('maomao', { start: 0, end: 3, first: 0}),
@@ -43,9 +44,6 @@ class Play extends Phaser.Scene {
       //this.ship04 = new liteSpaceship(this, game.config.width + borderUISize*9, borderUISize*4, 'kaiwen01', 0, 100).setOrigin(0, 0);
       this.MaoMao.anims.play('maomao');
       this.speed = game.settings.speed;
-      this.xianjing_p =  game.settings.xianjing_p;
-      this.current = 0;
-      this.youtong = false;
 
 
 
@@ -68,8 +66,7 @@ class Play extends Phaser.Scene {
         },
         fixedWidth: 100
       }
-      this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.Score, scoreConfig);
-      this.bestp = this.add.text(borderUISize + borderPadding + scoreConfig.fixedWidth *1.5 , borderUISize + borderPadding*2, config.bestpoint, scoreConfig);
+      this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, config.bestpoint, scoreConfig);
       this.clockRight = this.add.text(-borderUISize + game.config.width - borderPadding - scoreConfig.fixedWidth, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
       this.gameOver = false;
       scoreConfig.fixedWidth = 0;
@@ -97,6 +94,12 @@ class Play extends Phaser.Scene {
         this.xianjing02.update();
         this.xianjing03.update();
         this.xianjing04.update();
+        this.maobohe.update();
+
+        if(this.time.now >=  this.maobohe.end && !this.maobohe.move){
+          this.maobohe.move = true;
+        }   
+
         if((this.xianjing01.end - this.xianjing02.end)<= 200 && (this.xianjing01.end - this.xianjing02.end) >= 0 ){
           this.xianjing01.reset();
 
@@ -125,18 +128,25 @@ class Play extends Phaser.Scene {
         if(this.time.now >=  this.xianjing04.end && !this.xianjing04.move && this.shenling.visible ){
           this.xianjing04.move = true;
         }   
-        this.clockRight.text = Math.floor((this.time.now - this.time.startTime)/1000);
+        this.clockRight.text = Math.floor((this.time.now - this.time.startTime)/1000)+ this.Score;
         if(this.time.now - this.time.startTime >=15000 && game.settings.speed == this.xianjing01.moveSpeed){
           this.xianjing01.moveSpeed += 1;
           this.xianjing02.moveSpeed += 1;
           this.xianjing03.moveSpeed += 1;
           this.xianjing04.moveSpeed += 1;
+          this.maobohe.moveSpeed += 1;
           this.speed += 1;
         }
         if(this.time.now - this.time.startTime >=30000 && this.shenling.visible == false){
           this.shenling.visible = true;
           this.chengshi.visible = false;
-          this.xianjing_p += 0.1;
+          this.xianjing03.p -= 1;
+          this.xianjing04.p -= 1;
+        }
+        if(this.checkCollision(this.MaoMao,this.maobohe)){
+          this.maobohe.reset();
+          this.Score += 3;
+          this.sound.play('sfx_coin');
         }
         if (this.checkCollision(this.MaoMao, this.xianjing01)||
         this.checkCollision(this.MaoMao, this.xianjing02)||
@@ -157,6 +167,7 @@ class Play extends Phaser.Scene {
           this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
           this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (Q) to Restart or (E) for Menu', scoreConfig).setOrigin(0.5);
           this.sound.play('sfx_hit');
+          config.bestpoint = Math.floor((this.time.now - this.time.startTime)/1000)+ this.Score;
         }
       }  
     }
