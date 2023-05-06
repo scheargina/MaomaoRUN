@@ -3,7 +3,11 @@ class Menu extends Phaser.Scene {
       super("menuScene");
     }
     preload() {
-      //this.load.audio('sfx_select', './assets/blip_select12.wav');
+      this.load.audio('sfx_jump', './assets/jump.wav');
+      this.load.audio('sfx_select', './assets/blipSelect.wav');
+      this.load.audio('sfx_coin', './assets/pickupCoin.wav');
+      this.load.audio('sfx_hit', './assets/hitHurt.wav');
+      this.load.audio('sfx_bgm', './assets/best-time-112194.mp3');
       this.load.image('menubackground', './assets/chengshi.png');
       this.load.image('tou', './assets/maomaotou.png');
       this.load.spritesheet('runmaomao', './assets/maomao.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 3});
@@ -15,7 +19,10 @@ class Menu extends Phaser.Scene {
         frameRate: 5,
         repeat:-1
       });
-      //this.sound.play('backgroundm');
+      this.sfxbgm = this.sound.add('sfx_bgm');
+      this.sfxbgm.play();
+      this.sfxbgm.volume = 0.1;
+      this.sfxbgm.loop = true;
 
       this.beijing = this.add.tileSprite(0, 0, 640, 400, 'menubackground').setOrigin(0, 0);
 
@@ -36,11 +43,13 @@ class Menu extends Phaser.Scene {
       
       this.add.image(game.config.width/2, 0 ,"tou").setOrigin(0, 0);
       this.add.text(game.config.width/2, game.config.height/4 - borderUISize - borderPadding, 'MIAO MIAO RUN', menuConfig).setOrigin(0.5);
-      this.add.text(game.config.width/2, game.config.height/2, 'Use Space to jump', menuConfig).setOrigin(0.5);
+      this.add.text(game.config.width/2, game.config.height/2, 'Use Space to Jump', menuConfig).setOrigin(0.5);
+      this.add.text(game.config.width/2, game.config.height/2 + borderUISize +
+      borderPadding, '(You can use Triple jump)', menuConfig).setOrigin(0.5);
       menuConfig.backgroundColor = '#00FF00';
       menuConfig.color = '#000';
-      this.add.text(game.config.width/2, game.config.height/2 + borderUISize +
-      borderPadding, 'Chasing Catnip!', menuConfig).setOrigin(0.5);
+      this.add.text(game.config.width/2, game.config.height/2 + borderUISize*2 +
+      borderPadding*2, 'Chasing Catnip!', menuConfig).setOrigin(0.5);
       keyJUMP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
     update() {

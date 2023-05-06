@@ -146,16 +146,12 @@ class Play extends Phaser.Scene {
           }
           this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
           this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (Q) to Restart or (E) for Menu', scoreConfig).setOrigin(0.5);
+          this.sound.play('sfx_hit');
         }
-      }   
-
-    
-
-
-
-
-      
+      }  
     }
+
+
     checkCollision(maomao, zhangai) {
       if (maomao.x < zhangai.x + zhangai.width -8 && 
         maomao.x + maomao.width > zhangai.x + 8 && 

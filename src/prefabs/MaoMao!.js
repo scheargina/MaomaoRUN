@@ -11,7 +11,7 @@ class MaoMao extends Phaser.GameObjects.Sprite {
       this.a = 2;
       this.oy = y;
       this.jumphight = 4;
-      //this.sfxRocket = scene.sound.add('sfx_rocket'); // add rocket sfx
+      this.sfxjump = scene.sound.add('sfx_jump');
     }
 
     update() {
@@ -23,10 +23,12 @@ class MaoMao extends Phaser.GameObjects.Sprite {
                 this.v -= this.jumphight;
                 this.playerjump += 1;
                 this.scene.tiao.visible = true;
+                this.sfxjump.play();
             }
         }else if(this.playerjump < this.jump && Phaser.Input.Keyboard.JustDown(keyJUMP) && this.v >= -this.a){
             this.v -= this.jumphight;
             this.playerjump += 1;
+            this.sfxjump.play();
         }
         if(this.y > this.oy && this.isJump){
             this.v = 0;
