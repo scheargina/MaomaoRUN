@@ -4,6 +4,7 @@ class xianjing extends Phaser.GameObjects.Sprite {
       scene.add.existing(this);
       this.moveSpeed = game.settings.speed;
       this.move = false;
+      this.end = 0;
     }
 
     update() {
@@ -18,5 +19,6 @@ class xianjing extends Phaser.GameObjects.Sprite {
     reset() {
         this.x = game.config.width;
         this.move = false;
+        this.end = this.scene.time.now + Math.random()*2000;
     }
 }

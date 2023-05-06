@@ -48,6 +48,7 @@ class Play extends Phaser.Scene {
       this.youtong = false;
 
 
+
       keyJUMP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
       keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
       keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
@@ -95,26 +96,35 @@ class Play extends Phaser.Scene {
         this.xianjing01.update(); 
         this.xianjing02.update();
         this.xianjing03.update();
-        this.xianjing04.update();  
-        if(this.time.now - this.current >= 500){
-          this.current = this.time.now;
-          if(Math.random()<this.xianjing_p && !this.xianjing01.move && this.chengshi.visible){
-            this.xianjing01.move = true;
-            this.youtong = true;
-          }   
-          if(Math.random()<this.xianjing_p && !this.xianjing02.move && this.chengshi.visible && !this.youtong){
-            this.xianjing02.move = true;
+        this.xianjing04.update();
+        if((this.xianjing01.end - this.xianjing02.end)<= 200 && (this.xianjing01.end - this.xianjing02.end) >= 0 ){
+          this.xianjing01.reset();
+
+        } 
+        if(this.time.now >=  this.xianjing01.end && !this.xianjing01.move && this.chengshi.visible){
           
-          }
-          if(Math.random()<this.xianjing_p && !this.xianjing03.move && this.shenling.visible){
-              this.xianjing03.move = true;
-            
-          }
-          if(Math.random()<this.xianjing_p && !this.xianjing04.move && this.shenling.visible){
-            this.xianjing04.move = true;
-          } 
-          this.youtong = false;
-        }    
+          this.xianjing01.move = true;
+        }   
+        if((this.xianjing02.end - this.xianjing01.end)<= 200 && (this.xianjing02.end - this.xianjing01.end) >= 0 ){
+          this.xianjing02.reset();
+        }
+        if(this.time.now >= this.xianjing02.end && !this.xianjing02.move && this.chengshi.visible){
+          this.xianjing02.move = true;
+        }
+        if((this.xianjing03.end - this.xianjing04.end)<= 200 && (this.xianjing03.end - this.xianjing04.end) >= 0 ){
+          this.xianjing03.reset();
+
+        }
+        if(this.time.now >=  this.xianjing03.end && !this.xianjing03.move && this.shenling.visible){
+            this.xianjing03.move = true;    
+        }
+        if((this.xianjing04.end - this.xianjing03.end)<= 200 && (this.xianjing04.end - this.xianjing03.end) >= 0 ){
+          this.xianjing04.reset();
+
+        }
+        if(this.time.now >=  this.xianjing04.end && !this.xianjing04.move && this.shenling.visible ){
+          this.xianjing04.move = true;
+        }   
         this.clockRight.text = Math.floor((this.time.now - this.time.startTime)/1000);
         if(this.time.now - this.time.startTime >=15000 && game.settings.speed == this.xianjing01.moveSpeed){
           this.xianjing01.moveSpeed += 1;
@@ -153,6 +163,7 @@ class Play extends Phaser.Scene {
 
 
     checkCollision(maomao, zhangai) {
+      
       if (maomao.x < zhangai.x + zhangai.width -8 && 
         maomao.x + maomao.width > zhangai.x + 8 && 
         maomao.y < zhangai.y + zhangai.height &&
@@ -160,6 +171,16 @@ class Play extends Phaser.Scene {
         return true;
       } else {
         return false;
+      }
+    }
+    randomtime(){
+      this.random1 = Math.floor(Math.random()*1000*2 + 1000);
+      this.random2 = Math.floor(Math.random()*1000*2 + 1000);
+      if(Math.abs(this.random1 - this.random2)<= 500){
+        this.random1 = 1000;
+      }
+      for(let y =0;y< Math.random()* 1000; y++){
+        Math.random()
       }
     }
     shipExplode(ship) {
