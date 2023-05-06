@@ -61,7 +61,7 @@ class Menu extends Phaser.Scene {
           xianjing_p: 0.5,
           speed:2
         }
-        //this.sound.play('sfx_select');
+        this.sound.play('sfx_select');
         this.scene.start('playScene');    
       }
     }

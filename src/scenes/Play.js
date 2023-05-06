@@ -82,9 +82,11 @@ class Play extends Phaser.Scene {
     }
     update() {
       if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyQ)) {
+        this.sound.play('sfx_select');
         this.scene.restart();
       }
       if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyE)) {
+        this.sound.play('sfx_select');
         this.scene.start("menuScene");
       }
 
