@@ -5,7 +5,7 @@ class xianjing extends Phaser.GameObjects.Sprite {
       this.moveSpeed = game.settings.speed;
       this.move = false;
       this.end = 0;
-      this.p = 2;
+      this.p = 3;
     }
 
     update() {

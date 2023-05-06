@@ -12,9 +12,10 @@ class tang extends Phaser.GameObjects.Sprite {
         if(this.move){
             this.x -= this.moveSpeed;
             this.visible = true; 
-            if(this.y <= game.config.height - 64){
-                this.y += 1;
+            if(this.y < game.config.height - 64){
+                this.y += this.moveSpeed;
             }
+
         }
         if(this.x <= 0 - this.width){
             this.reset();

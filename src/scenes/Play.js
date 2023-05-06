@@ -26,6 +26,8 @@ class Play extends Phaser.Scene {
       this.xianjing03 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai2').setOrigin(0,0);
       this.xianjing04 = new xianjing(this, game.config.width, game.config.height - 64*1.5, 'zhangai2').setOrigin(0,0);
       this.maobohe = new tang(this, game.config.width - 60 , game.config.height/3 + 48, 'maobohe').setOrigin(0,0);
+      this.boom = new tang(this, game.config.width - 60 , game.config.height/3 + 48, 'zhadan').setOrigin(0,0);
+      this.boom.p = 15;
       this.anims.create({
         key: 'maomao',
         frames: this.anims.generateFrameNumbers('maomao', { start: 0, end: 3, first: 0}),
@@ -95,9 +97,13 @@ class Play extends Phaser.Scene {
         this.xianjing03.update();
         this.xianjing04.update();
         this.maobohe.update();
+        this.boom.update();
 
         if(this.time.now >=  this.maobohe.end && !this.maobohe.move){
           this.maobohe.move = true;
+        }  
+        if(this.time.now >=  this.boom.end && !this.boom.move && this.time.now - this.time.startTime >= 15000){
+          this.boom.move = true;
         }   
 
         if((this.xianjing01.end - this.xianjing02.end)<= 200 && (this.xianjing01.end - this.xianjing02.end) >= 0 ){
@@ -135,6 +141,7 @@ class Play extends Phaser.Scene {
           this.xianjing03.moveSpeed += 1;
           this.xianjing04.moveSpeed += 1;
           this.maobohe.moveSpeed += 1;
+          this.boom.moveSpeed += 1;
           this.speed += 1;
         }
         if(this.time.now - this.time.startTime >=30000 && this.shenling.visible == false){
@@ -148,10 +155,12 @@ class Play extends Phaser.Scene {
           this.Score += 3;
           this.sound.play('sfx_coin');
         }
+        
         if (this.checkCollision(this.MaoMao, this.xianjing01)||
         this.checkCollision(this.MaoMao, this.xianjing02)||
         this.checkCollision(this.MaoMao, this.xianjing03)||
-        this.checkCollision(this.MaoMao, this.xianjing04)) {
+        this.checkCollision(this.MaoMao, this.xianjing04)||
+        this.checkCollision(this.MaoMao, this.boom)) {
           this.gameOver = true;
           let scoreConfig = {
             fontFamily: 'Courier',
@@ -167,7 +176,9 @@ class Play extends Phaser.Scene {
           this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
           this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (Q) to Restart or (E) for Menu', scoreConfig).setOrigin(0.5);
           this.sound.play('sfx_hit');
-          config.bestpoint = Math.floor((this.time.now - this.time.startTime)/1000)+ this.Score;
+          if(config.bestpoint < Math.floor((this.time.now - this.time.startTime)/1000)+ this.Score){
+            config.bestpoint = Math.floor((this.time.now - this.time.startTime)/1000)+ this.Score;
+          }
         }
       }  
     }
@@ -183,32 +194,5 @@ class Play extends Phaser.Scene {
       } else {
         return false;
       }
-    }
-    randomtime(){
-      this.random1 = Math.floor(Math.random()*1000*2 + 1000);
-      this.random2 = Math.floor(Math.random()*1000*2 + 1000);
-      if(Math.abs(this.random1 - this.random2)<= 500){
-        this.random1 = 1000;
-      }
-      for(let y =0;y< Math.random()* 1000; y++){
-        Math.random()
-      }
-    }
-    shipExplode(ship) {
-      // temporarily hide ship
-      ship.alpha = 0;
-      // create explosion sprite at ship's position
-      let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
-      boom.anims.play('explode');             // play explode animation
-      boom.on('animationcomplete', () => {    // callback after anim completes
-        ship.reset();                         // reset ship position
-        ship.alpha = 1;                       // make ship visible again
-        boom.destroy();                       // remove explosion sprite
-      });      
-      this.p1Score += ship.points;
-      this.scoreLeft.text = this.p1Score;
-      let index = Math.floor(Math.random()*5);
-      let sound_dict = ['sfx_explosion','sfx_explosiona','sfx_explosionb','sfx_explosionc','sfx_explosiond'];
-      this.sound.play(sound_dict[index]);     
     }
   }
